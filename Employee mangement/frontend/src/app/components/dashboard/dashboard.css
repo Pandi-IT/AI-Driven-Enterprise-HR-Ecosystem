@@ -1,0 +1,220 @@
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+  width: 260px;
+  background-color: var(--slate-900);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--slate-800);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  border-bottom: 1px solid var(--slate-800);
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  color: var(--slate-400);
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: white;
+  background-color: var(--slate-800);
+}
+
+.nav-item.active {
+  color: white;
+  background-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+}
+
+.nav-icon {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--slate-800);
+}
+
+/* Main Content area offset by Sidebar */
+.dashboard-main {
+  flex-grow: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-header {
+  height: 70px;
+  background-color: var(--slate-900);
+  border-bottom: 1px solid var(--slate-800);
+}
+
+.mood-box {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid var(--slate-700);
+}
+
+.mood-box:hover {
+  background-color: var(--slate-700) !important;
+}
+
+.text-warning-glow {
+  color: #fbbf24;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+.text-success-glow {
+  color: #34d399;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+}
+
+/* Chatbot Floating Widget */
+.chatbot-toggle-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4);
+  transition: transform 0.2s;
+}
+
+.chatbot-toggle-btn:hover {
+  transform: scale(1.08);
+}
+
+.chatbot-widget {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 380px;
+  height: 500px;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  border: 1px solid var(--slate-200);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chatbot-hidden {
+  transform: translateY(120%) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chatbot-header {
+  background-color: var(--slate-900);
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.chatbot-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--slate-50);
+}
+
+.chat-message {
+  max-width: 85%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+.chat-message ::ng-deep p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-message ::ng-deep pre {
+  background-color: rgba(0,0,0,0.05);
+  padding: 0.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.bot-msg {
+  align-self: flex-start;
+  background-color: white;
+  color: var(--slate-800);
+  border: 1px solid var(--slate-200);
+  border-top-left-radius: 0;
+}
+
+.user-msg {
+  align-self: flex-end;
+  background-color: var(--primary);
+  color: white;
+  border-top-right-radius: 0;
+}
+
+.chatbot-input input {
+  font-size: 0.9rem;
+}
+
+/* Pulse Survey Emojis */
+.rating-emoji {
+  font-size: 2.2rem;
+  cursor: pointer;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.rating-emoji:hover, .rating-emoji.selected {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.2);
+}

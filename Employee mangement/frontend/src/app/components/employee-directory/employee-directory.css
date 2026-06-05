@@ -1,0 +1,85 @@
+.search-input-group {
+  border: 1px solid var(--slate-200);
+}
+
+.search-input-group input {
+  box-shadow: none;
+}
+
+.text-hover-underline:hover {
+  text-decoration: underline !important;
+}
+
+/* Avatar Circle */
+.avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+/* Offcanvas custom overrides */
+.offcanvas {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+.max-h-drawer-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.risk-analysis-box ::ng-deep p {
+  margin-bottom: 0.8rem;
+}
+
+.risk-analysis-box ::ng-deep p:last-child {
+  margin-bottom: 0;
+}
+
+/* AI Output styling inside modal */
+.ai-output-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid var(--slate-200);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+  line-height: 1.6;
+}
+
+.ai-output-container ::ng-deep h3, .ai-output-container ::ng-deep h4 {
+  font-family: var(--font-title);
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--slate-900);
+}
+
+.ai-output-container ::ng-deep h3:first-child, .ai-output-container ::ng-deep h4:first-child {
+  margin-top: 0;
+}
+
+.ai-output-container ::ng-deep p {
+  margin-bottom: 1rem;
+}
+
+.ai-output-container ::ng-deep p:last-child {
+  margin-bottom: 0;
+}
+
+.ai-output-container ::ng-deep ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ai-output-container ::ng-deep li {
+  margin-bottom: 0.5rem;
+}

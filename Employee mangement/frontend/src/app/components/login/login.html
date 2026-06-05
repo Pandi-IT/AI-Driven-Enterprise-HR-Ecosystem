@@ -1,0 +1,54 @@
+<div class="login-container py-5 px-3">
+  <div class="row auth-card mx-auto g-0 position-relative animate-fade-in">
+    <a routerLink="/landing" class="back-btn"><i class="fas fa-arrow-left me-2"></i>Back</a>
+    
+    <!-- Left branding banner (hidden on small screens) -->
+    <div class="col-md-5 auth-left d-none d-md-flex">
+      <i class="fas fa-shield-alt display-3 mb-4 opacity-75"></i>
+      <h2 class="fw-bold mb-3">Secure HR Gateway</h2>
+      <p class="opacity-75 mb-0">Authorized personnel only. Access to sensitive employee data, recruitment pipelines, and AI predictive analytics is logged and monitored.</p>
+    </div>
+    
+    <!-- Login Form -->
+    <div class="col-md-7 auth-right bg-white d-flex flex-column justify-content-center">
+      <div class="text-center mb-4 d-md-none">
+        <i class="fas fa-shield-alt display-4 text-primary mb-3"></i>
+        <h3 class="fw-bold">HR Gateway</h3>
+      </div>
+      
+      <h3 class="fw-bold text-dark mb-1">Welcome back</h3>
+      <p class="text-muted mb-4">Please sign in to your HR account.</p>
+
+      <div *ngIf="loginError" class="alert alert-danger py-2 rounded-3 small">
+        <i class="fas fa-exclamation-circle me-1"></i> Invalid credentials.
+      </div>
+
+      <form (submit)="onSubmit()">
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted text-uppercase">Username ID</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-user"></i></span>
+            <input type="text" [(ngModel)]="username" name="username" class="form-control border-start-0 ps-0" placeholder="e.g., admin" required>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <div class="d-flex justify-content-between">
+            <label class="form-label small fw-bold text-muted text-uppercase">Password</label>
+            <a href="#" class="small text-decoration-none" tabindex="-1" (click)="$event.preventDefault()">Forgot?</a>
+          </div>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-lock"></i></span>
+            <input type="password" [(ngModel)]="password" name="password" class="form-control border-start-0 ps-0" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 btn-auth mb-3 shadow-sm py-2">
+          Sign In
+        </button>
+        
+        <p class="text-center small text-muted mb-0">Use <strong>admin / admin</strong> for demo purposes.</p>
+      </form>
+    </div>
+  </div>
+</div>
