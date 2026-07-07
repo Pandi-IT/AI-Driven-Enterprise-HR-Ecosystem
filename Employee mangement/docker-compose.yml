@@ -4,9 +4,8 @@ services:
     image: mysql:8.0
     container_name: employee-mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: pandi@1204
-      MYSQL_DATABASE: employee_db
+    env_file:
+      - ./employee/.env
     ports:
       - "3307:3306"
     volumes:
@@ -20,11 +19,10 @@ services:
     restart: always
     ports:
       - "8081:8080"
+    env_file:
+      - ./employee/.env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/employee_db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=pandi@1204
-      - SERVER_PORT=8080
     depends_on:
       - db
 
