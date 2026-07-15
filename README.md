@@ -1,54 +1,36 @@
-# 🚀 AI-Driven Enterprise HR Ecosystem (Employee Management System)
+# 🚀 AuraHR: AI-Driven Enterprise HR & Cognitive Recruitment Ecosystem
 
-A state-of-the-art, production-ready, full-stack **Enterprise HR & Recruitment Ecosystem**. This platform integrates modern HR directory management, attendance tracking, leave requests, and employee engagement pulse surveys with a powerful **Llama 3.3-powered AI engine** for advanced HR analytics, recruitment evaluation, and administrative assistance.
+AuraHR is a state-of-the-art, production-ready, full-stack **Enterprise HR Directory & Recruitment Ecosystem**. This platform integrates modern employee directory management, attendance tracking, leave requests, and employee engagement surveys with a powerful **Llama 3.3-powered AI engine** for advanced HR analytics, recruitment evaluation, and administrative automation.
 
-Built with a high-performance **Angular 21** frontend, a robust **Spring Boot 3.5** backend, a **MySQL 8.0** database, and dockerized for instant local or cloud deployment.
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-- **Frontend:**
-  - **Framework:** Angular 21 (Vite & ESBuild application builder)
-  - **Styling:** Vanilla CSS (Modern, premium dark-themed dashboard, responsive design)
-  - **HTTP Client:** Angular HttpClient with dynamic build-time environments
-- **Backend:**
-  - **Framework:** Spring Boot 3.5.5 (Java 21)
-  - **ORM:** Spring Data JPA (Hibernate)
-  - **Security/Properties:** Dynamic Environment Injection & `spring-dotenv` integration
-- **AI Engine:**
-  - **Framework:** Spring AI (OpenAI Proxy Integration)
-  - **LLM Provider:** Groq API (`llama-3.3-70b-versatile`)
-- **Database:**
-  - **RDBMS:** MySQL 8.0 (Dockerized & local configurations)
-- **Containerization & Routing:**
-  - **Orchestration:** Docker Compose
-  - **Web Server & Reverse Proxy:** NGINX (Static file hosting + dynamic API reverse-proxying)
+Built with a high-performance **React (Vite, TypeScript, Tailwind CSS v4)** frontend, a robust **Spring Boot 3.5 (Java 21)** backend, a **PostgreSQL/MySQL** database, and dockerized for instant local or cloud deployment.
 
 ---
 
-## ✨ System Features
+## 🗺️ Architectural Design
 
-### 1. Core HR Modules
-* **Employee Directory:** Full CRUD operations (Add, View, Update, Terminate) for managing employee profiles, departments, salaries, and contact details.
-* **Attendance Tracker:** Check-in and check-out logs tracking daily attendance, timestamps, and status.
-* **Leave Management Portal:** Request leave requests, review employee leave balances, and approve/reject requests with automatic HR workflows.
-* **Pulse Surveys:** Employee voice tool capturing numeric satisfaction ratings (1-5) and comments for real-time engagement sentiment tracking.
+Below is the production deployment architecture showing the separation of concerns between client-side hosting, backend computing, and database management.
 
-### 2. Recruitment & Careers Portal
-* **Job Board:** Create and publish job openings with target departments.
-* **Applicant Tracking System (ATS):** Allow candidates to submit applications and resumes to specific jobs.
+```mermaid
+graph TD
+    subgraph Client Space (Netlify / Static Hosting)
+        A[React Frontend] -->|Browser Requests| B(Client Router)
+        A -->|API Calls / HTTPS| C{CORS Gateway}
+    end
 
-### 3. AI-Powered Cognitive HR Engine
-* **Cognitive Assistant (HR Chat):** Generates responses to general HR queries.
-* **HR Email Generator:** Auto-generates structured, warm, and authoritative HR letters/emails based on custom scenarios.
-* **Performance Evaluator:** Analyzes employee profiles, attendance logs, and past reviews to score performance, identify top strengths, outline improvements, and recommend actions (e.g., promotion/development plan).
-* **Leave Response Assistant:** Drafts customized letters approving or rejecting leave requests based on historical leave patterns.
-* **Attendance Pattern Analyzer:** Identifies lateness/absenteeism trends and outputs a critical Risk Level (Low/Medium/High) along with corrective action items.
-* **Recruitment JD Generator:** Writes customized Job Descriptions (Role, Responsibilities, Required Skills) for new roles instantly.
-* **Candidate Suitability Ranker:** Performs semantic matching between a job description and a candidate's resume, producing a suitability score (0-100), key skills gap breakdown, and recruitment verdict.
-* **Attrition Risk Analytics:** Analyzes attendance, leaves, and reviews to predict turnover risks and suggest retention strategies.
-* **Morale Sentiment Summarizer:** Processes pulse survey scores and text feedback to compile engagement summaries and actionable HR recommendations.
+    subgraph Server Space (Render / Docker Web Service)
+        C -->|Valid Origin & JWT| D[Spring Boot Backend]
+        D -->|Security Filter| E[JWT Authentication]
+        D -->|Cognitive Tasks| F[Spring AI Client]
+    end
+
+    subgraph AI Space (Groq Cloud API)
+        F -->|API Key Auth| G[Llama 3.3 70B Model]
+    end
+
+    subgraph Database Space (Render Managed Postgres / MySQL)
+        D -->|Hikari Connection Pool| H[(Relational Database)]
+    end
+```
 
 ---
 
@@ -57,24 +39,39 @@ Built with a high-performance **Angular 21** frontend, a robust **Spring Boot 3.
 ```text
 Employee-Management-System/
 ├── Employee mangement/
-│   ├── docker-compose.yml       # Production Docker orchestration config
+│   ├── docker-compose.yml       # Docker Compose orchestration config (Staging)
 │   │
 │   ├── employee/                # Spring Boot Backend (Java 21)
-│   │   ├── src/                 # Main Java source files and properties
-│   │   ├── pom.xml              # Maven dependencies (Spring Boot, Spring AI, spring-dotenv)
-│   │   ├── Dockerfile           # Multi-stage JRE Alpine container build
-│   │   ├── .env.example         # Backend environment variables template
-│   │   └── .gitignore           # Ignores build outputs (target/) and local secrets
+│   │   ├── src/
+│   │   │   ├── main/
+│   │   │   │   ├── java/com/example/employee/
+│   │   │   │   │   ├── config/          # CORS, Security, Data Bootstrapping
+│   │   │   │   │   ├── controller/      # API Controllers (REST Endpoints)
+│   │   │   │   │   ├── dto/             # Data Transfer Objects
+│   │   │   │   │   ├── exception/       # Global Exception Handling
+│   │   │   │   │   ├── model/           # Entity Models (JPA mappings)
+│   │   │   │   │   ├── repository/      # Database Repositories
+│   │   │   │   │   ├── security/        # JWT Filters, Providers, Roles
+│   │   │   │   │   └── service/         # Business Logic (AI, HR Modules)
+│   │   │   │   └── resources/
+│   │   │   │       ├── application.properties      # Base configurations
+│   │   │   │       ├── application-dev.properties  # Local dev profile
+│   │   │   │       └── application-prod.properties # Production profile (HikariCP)
+│   │   ├── pom.xml              # Maven dependencies
+│   │   └── Dockerfile           # Multi-stage JRE Alpine container build
 │   │
-│   └── frontend/                # Angular 21 Frontend
-│       ├── src/                 # Components, routes, styles, assets
-│       ├── nginx.conf           # Production NGINX web server & proxy rules
-│       ├── set-env.js           # Build-time environment injector script
-│       ├── angular.json         # Build and replacement configurations
+│   └── frontend/                # React Frontend (Vite + TypeScript)
+│       ├── public/
+│       │   └── _redirects        # Netlify client-side routing redirect rules
+│       ├── src/
+│       │   ├── components/      # Common UI elements
+│       │   ├── layouts/         # Page shell structures
+│       │   ├── pages/           # Views (Dashboard, Employees, AI Assistant)
+│       │   ├── services/        # Axios API Client with JWT interceptors
+│       │   └── main.tsx         # App entrypoint
 │       ├── package.json         # NPM scripts and dependencies
-│       ├── Dockerfile           # Multi-stage build hosting static files in NGINX
-│       ├── .env.example         # Frontend environment variables template
-│       └── .gitignore           # Ignores generated environment folders and local secrets
+│       ├── vite.config.ts       # Vite config (loaded with backend port resolvers)
+│       └── Dockerfile           # Multi-stage build hosting static files in NGINX
 └── README.md                    # System documentation
 ```
 
@@ -82,128 +79,211 @@ Employee-Management-System/
 
 ## ⚙️ Environment Variables Separation
 
-The platform utilizes separate `.env` configurations to separate variables and secrets from code, making the application cloud-ready and deployable without modifications.
-
 ### Backend Configurations (`employee/.env`)
-Create a `.env` file in the `Employee mangement/employee/` directory.
+Create a `.env` file in the `employee/` directory for local development:
 
 | Variable | Description | Default Local Value |
 | :--- | :--- | :--- |
-| `SPRING_DATASOURCE_URL` | JDBC URL for MySQL Database connection | `jdbc:mysql://localhost:3306/employee_db` |
-| `SPRING_DATASOURCE_USERNAME` | MySQL database connection username | `root` |
-| `SPRING_DATASOURCE_PASSWORD` | MySQL database connection password | `your_mysql_password` |
-| `MYSQL_ROOT_PASSWORD` | Database root password (used by Docker Compose DB) | `your_mysql_password` |
-| `MYSQL_DATABASE` | Initial database name to create | `employee_db` |
+| `DB_HOST` | Database server hostname | `localhost` |
+| `DB_PORT` | Database port number | `3306` |
+| `DB_NAME` | Relational database schema name | `employee_db` |
+| `SPRING_DATASOURCE_USERNAME`| Database connection username | `root` |
+| `SPRING_DATASOURCE_PASSWORD`| Database connection password | `your_password` |
+| `MYSQL_ROOT_PASSWORD` | Database root password (Docker Compose only) | `your_password` |
+| `MYSQL_DATABASE` | Database to bootstrap (Docker Compose only) | `employee_db` |
 | `SERVER_PORT` | Port where the Spring Boot application listens | `8080` |
-| `GROQ_API_KEY` | Your Groq API key for Llama AI integration | `YOUR_API_KEY` |
-| `GROQ_BASE_URL` | Base URL for API requests | `https://api.groq.com/openai` |
-| `GROQ_MODEL` | The LLM Model used for processing HR requests | `llama-3.3-70b-versatile` |
+| `SPRING_PROFILES_ACTIVE` | Active configuration profile (`dev` or `prod`) | `dev` |
+| `APP_JWT_SECRET` | Secret key for generating JWT signatures | `default-secret-key-very-long`|
+| `APP_CORS_ALLOWED_ORIGINS` | Permitted cross-origin hosts | `*` |
+| `GROQ_API_KEY` | API token for Groq Cloud integration | `YOUR_API_KEY` |
+| `GROQ_BASE_URL` | API base URL for OpenAI-compatible client | `https://api.groq.com/openai` |
+| `GROQ_MODEL` | The LLM model used for cognitive HR tasks | `llama-3.3-70b-versatile` |
 
 ### Frontend Configurations (`frontend/.env`)
-Create a `.env` file in the `Employee mangement/frontend/` directory.
+Create a `.env` file in the `frontend/` directory for local development:
 
 | Variable | Description | Default Local Value |
 | :--- | :--- | :--- |
-| `API_URL` | Local dev endpoint for API requests | `http://localhost:8081/api` |
-| `PRODUCTION` | Target environment compile flag | `false` |
+| `VITE_API_URL` | Local API gateway endpoint | `http://localhost:8080/api` |
 
 ---
 
-## 🚀 Setup & Launch Instructions
+## 🚀 Setup & Launch Instructions (Local Development)
 
-### Method 1: Instant Launch via Docker Compose (Recommended)
-This approach launches the entire stack (Database, Backend API, Frontend, and NGINX Proxy) automatically inside isolated container environments.
+### Prerequisites
+* **Java Development Kit (JDK) 21**
+* **Node.js** (v18 or higher) and **npm**
+* **MySQL 8.0** (running locally)
 
-1. Navigate to the root deployment directory:
-   ```bash
-   cd "Employee mangement"
-   ```
-2. Setup your Backend environment file:
-   - Copy `employee/.env.example` to `employee/.env`
-   - Fill in your `GROQ_API_KEY` inside `employee/.env`.
-3. Launch the container cluster:
-   ```bash
-   docker compose up --build -d
-   ```
-4. Access the applications:
-   - **Frontend Dashboard:** [http://localhost](http://localhost) (Served on standard Port `80` with NGINX reverse-proxying API calls automatically to avoid CORS)
-   - **Backend Service:** [http://localhost:8081/api/health](http://localhost:8081/api/health)
-   - **MySQL Database:** Exists locally on port `3307` (mapped internally to `3306`)
-
----
-
-### Method 2: Manual Local Development Launch
-
-#### 1. Database Setup
-Ensure you have MySQL installed locally and running.
-Create the database:
+### Step 1: Database Setup
+Login to your local MySQL server and create the database schema:
 ```sql
 CREATE DATABASE employee_db;
 ```
 
-#### 2. Backend API Setup (Spring Boot)
-1. Navigate to the backend directory:
+### Step 2: Backend Setup
+1. Navigate to the backend folder:
    ```bash
    cd "Employee mangement/employee"
    ```
-2. Configure `.env`:
-   - Copy `.env.example` to `.env`.
-   - Update database passwords and supply a valid `GROQ_API_KEY`.
-3. Start the application using Maven Wrapper:
-   - **Windows:**
+2. Copy `.env.example` to `.env` and fill in your database credentials and `GROQ_API_KEY`.
+3. Start the application:
+   - **Windows (PowerShell):**
      ```powershell
      .\mvnw.cmd spring-boot:run
      ```
-   - **macOS/Linux:**
+   - **Linux / macOS:**
      ```bash
      chmod +x mvnw
      ./mvnw spring-boot:run
      ```
-4. Confirm health check: [http://localhost:8080/api/health](http://localhost:8080/api/health)
+4. Verification: Visit [http://localhost:8080/api/health](http://localhost:8080/api/health) to confirm the service is running.
 
-#### 3. Frontend Dashboard Setup (Angular)
-1. Navigate to the frontend directory:
+### Step 3: Frontend Setup
+1. Navigate to the frontend folder:
    ```bash
    cd "Employee mangement/frontend"
    ```
-2. Install project dependencies:
+2. Copy `.env.example` to `.env` and adjust the API URL if needed.
+3. Install dependencies and start the development server:
    ```bash
    npm install
+   npm run dev
    ```
-3. Configure `.env`:
-   - Copy `.env.example` to `.env`.
-4. Launch the Angular development server:
-   ```bash
-   npm run start
-   ```
-   *Note: This command runs `node set-env.js` automatically which compiles environment variables into `src/environments/environment.ts` before serving Angular.*
-5. Access the app in your browser: [http://localhost:4200](http://localhost:4200)
+4. Access the web interface: Open [http://localhost:5173](http://localhost:5173).
 
 ---
 
-## 🔗 Key API Endpoints
+## 🐳 Instant Launch via Docker Compose (Staging)
 
-### 1. Employee Directory
-* `GET /api/employees` - Retrieve all employees.
-* `GET /api/employees/{id}` - Retrieve detailed info of a single employee.
-* `POST /api/employees` - Create a new employee profile.
-* `PUT /api/employees/{id}` - Update details of an existing employee.
-* `DELETE /api/employees/{id}` - Terminate/delete an employee.
+This launches the entire stack (Database, Backend API, Frontend, and NGINX Proxy) automatically inside isolated container environments.
 
-### 2. Attendance & Leave logs
+1. Navigate to the deployment root:
+   ```bash
+   cd "Employee mangement"
+   ```
+2. Run the cluster:
+   ```bash
+   docker compose up --build -d
+   ```
+3. Access the applications:
+   - **Frontend App**: [http://localhost](http://localhost) (Served via NGINX reverse-proxying API requests automatically to avoid CORS)
+   - **Backend API Health Check**: [http://localhost:8081/api/health](http://localhost:8081/api/health)
+
+---
+
+## ☁️ Cloud Deployment Guide (Production)
+
+### 1. Database Provisioning (Render PostgreSQL)
+1. Log in to the **Render Dashboard** and click **New > PostgreSQL**.
+2. Define a database name, region, and select the free tier.
+3. Click **Create Database**.
+4. Once active, note the **Internal Database URL** (for backend services in the same Render region) and connection details (Host, Username, Password, Database Name).
+
+### 2. Backend Deployment (Render Web Service)
+1. Click **New > Web Service** and link your Git repository.
+2. Configure settings:
+   - **Root Directory**: `Employee mangement/employee`
+   - **Runtime**: `Docker` (Render automatically detects the multi-stage `Dockerfile`)
+3. Under the **Environment** tab, click **Add Environment Variable** and configure the following:
+   - `SPRING_PROFILES_ACTIVE` = `prod`
+   - `SPRING_DATASOURCE_URL` = `jdbc:postgresql://<render-internal-host>:5432/<dbname>`
+   - `SPRING_DATASOURCE_USERNAME` = `<render-postgres-username>`
+   - `SPRING_DATASOURCE_PASSWORD` = `<render-postgres-password>`
+   - `GROQ_API_KEY` = `<your-groq-api-key>`
+   - `GROQ_BASE_URL` = `https://api.groq.com/openai`
+   - `GROQ_MODEL` = `llama-3.3-70b-versatile`
+   - `APP_JWT_SECRET` = `<your-secure-random-32-char-string>`
+   - `APP_CORS_ALLOWED_ORIGINS` = `https://your-frontend.netlify.app` *(Replace with your Netlify frontend URL)*
+4. Click **Deploy Web Service**.
+
+### 3. Frontend Deployment (Netlify)
+1. Log in to **Netlify** and select **Add new site > Import an existing project**.
+2. Select your repository and configure the build settings:
+   - **Base directory**: `Employee mangement/frontend`
+   - **Build command**: `npm run build`
+   - **Publish directory**: `dist`
+3. Go to **Site settings > Environment variables** and add:
+   - `VITE_API_URL` = `https://your-backend.onrender.com/api` *(Your Render backend domain followed by /api)*
+4. Go to **Deploys > Trigger Deploy > Clear cache and deploy site** to build.
+
+---
+
+## 🔒 Security Architecture
+
+### 1. Stateless Authentication (JWT)
+AuraHR employs stateless authentication using JSON Web Tokens (JWT).
+* When a user logs in, the server generates an **Access Token** (expires in 15 minutes) and a **Refresh Token** (expires in 7 days).
+* The React frontend automatically intercepts outgoing HTTP requests via Axios interceptors ([api.ts](file:///d:/Full%20stack%20projects/Employee-Management-System/Employee%20mangement/frontend/src/services/api.ts#L12)) to inject the Bearer token.
+* If a request fails with a `401 Unauthorized` status, the response interceptor attempts to refresh the access token silently using the refresh token, providing a seamless user experience.
+
+### 2. CORS Policy
+CORS is configured dynamically via [CorsConfig.java](file:///d:/Full%20stack%20projects/Employee-Management-System/Employee%20mangement/employee/src/main/java/com/example/employee/config/CorsConfig.java).
+* In development, it defaults to allowing any host (`*`) utilizing `allowedOriginPatterns` to safely exchange authentication headers.
+* In production, the backend restricts access to origin URLs defined in the `APP_CORS_ALLOWED_ORIGINS` environment variable. Multiple allowed hosts can be defined using commas (e.g., `https://domain1.com,https://domain2.com`).
+
+---
+
+## 🧠 AI Cognitive HR Engine Deep Dive
+
+AuraHR integrates a Cognitive AI engine powered by Spring AI and the Groq Cloud API. Key modules include:
+
+### 1. Performance Evaluator (`POST /api/ai/evaluate`)
+Processes employee profiles, attendance logs, and past reviews to score performance, outline strengths, identify gaps, and suggest promotion or development plans.
+
+### 2. Attrition Risk Analyzer (`POST /api/ai/analytics/attrition-risk`)
+Analyzes attendance stability, leave request frequency, satisfaction trends, and performance ratings to output a turn-over risk evaluation (Low/Medium/High) along with retention strategies.
+
+### 3. Candidate Suitability Ranker (`POST /api/ai/recruitment/rank-candidate`)
+Performs semantic text analysis comparing an uploaded resume with a target Job Description. Returns a match score (0-100), key skills gap breakdown, and a hiring verdict.
+
+### 4. Attendance Trend Analyzer (`POST /api/ai/attendance/analyze`)
+Processes daily timestamp check-in logs to identify chronic lateness or absenteeism patterns, generating risk levels and structured corrective action recommendations.
+
+---
+
+## 🔗 REST API Endpoint Reference
+
+### 1. Authentication
+* `POST /api/auth/login`
+  - *Payload*: `{"email": "admin@co.com", "password": "admin123"}`
+  - *Response*: `{"accessToken": "...", "refreshToken": "...", "email": "admin@co.com", "role": "ROLE_ADMIN"}`
+* `POST /api/auth/refresh`
+  - *Payload*: `{"refreshToken": "..."}`
+  - *Response*: `{"accessToken": "...", "refreshToken": "..."}`
+
+### 2. Employee Directory
+* `GET /api/employees` - Retrieve all employee profiles.
+* `GET /api/employees/{id}` - Retrieve details of a single employee.
+* `POST /api/employees` - Create a new employee.
+* `PUT /api/employees/{id}` - Update employee data.
+* `DELETE /api/employees/{id}` - Remove an employee.
+
+### 3. Attendance & Leaves
 * `GET /api/attendance` - Fetch general attendance logs.
 * `POST /api/attendance` - Log a check-in / check-out.
 * `GET /api/leaves` - List leave requests.
 * `POST /api/leaves` - Request a leave application.
 * `PUT /api/leaves/{id}/status` - Approve/Reject a leave request.
 
-### 3. Cognitive HR & AI Assistance
+### 4. Cognitive HR & AI Assistance
 * `POST /api/ai/chat` - Interact with the general HR assistant chatbot.
-* `POST /api/ai/email/generate` - Generate HR emails (Requires payload parameters).
 * `POST /api/ai/evaluate` - Generate a performance evaluation.
-* `POST /api/ai/attendance/analyze` - Analyze attendance habits and risk patterns.
-* `POST /api/ai/leave/respond` - Draft leave responses.
-* `POST /api/ai/recruitment/generate-jd` - Generate role specifications.
-* `POST /api/ai/recruitment/rank-candidate` - Rank candidate resume against JD.
 * `POST /api/ai/analytics/attrition-risk` - Calculate employee retention risk.
-* `POST /api/ai/analytics/mood-summary` - Analyze morale trend based on pulse surveys.
+* `POST /api/ai/recruitment/rank-candidate` - Rank candidate resume against JD.
+
+---
+
+## 🛠️ Troubleshooting & Common Issues
+
+### 1. Netlify 404 Page Not Found (On Page Refresh)
+* **Cause**: Client-side routing (React Router) intercepts links. When refreshing or loading a subpath directly, the static server looks for a folder named `/login` and fails.
+* **Solution**: The `_redirects` file must be present in your build output. Ensure `frontend/public/_redirects` is committed to git. Netlify will copy this file to the `dist` folder automatically, redirecting routing fallback to `index.html`.
+
+### 2. CORS Blocked error
+* **Cause**: Deployed frontend URL is not configured on the backend, or the backend is configured with a trailing slash in the `APP_CORS_ALLOWED_ORIGINS` variable.
+* **Solution**: Verify the value of `APP_CORS_ALLOWED_ORIGINS` on Render. It should match your frontend Netlify address without a trailing slash (e.g. `https://example.netlify.app`).
+
+### 3. Database Schema Validation Failures
+* **Cause**: In production profile, `spring.jpa.hibernate.ddl-auto` defaults to `validate`. If the database tables have not been created, the server will crash on startup.
+* **Solution**: When launching the backend container for the first time, you can temporarily override the variable `SPRING_JPA_HIBERNATE_DDL_AUTO=update` to let Spring Boot auto-generate the schemas, then set it back to `validate` for security.

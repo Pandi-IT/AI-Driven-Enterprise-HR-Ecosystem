@@ -1,0 +1,10 @@
+# Centralized Environment Variables
+Employee mangement/.env
+
+# Local build and database caches
+**/node_modules/
+**/dist/
+**/target/
+.idea/
+.vscode/
+*.log
